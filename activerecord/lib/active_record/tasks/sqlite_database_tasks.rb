@@ -18,6 +18,8 @@ module ActiveRecord
         require 'pathname'
         path = Pathname.new configuration['database']
         file = path.absolute? ? path.to_s : File.join(root, path)
+        # release any existing connections for windows to be happy
+        ActiveRecord::Base.connection_pool.disconnect!
 
         FileUtils.rm(file) if File.exist?(file)
       end
